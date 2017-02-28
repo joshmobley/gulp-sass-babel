@@ -1,12 +1,12 @@
-# Starter Project - Gulp
+# Starter Project - Gulp/SASS/Babel
 
-This project is to build a reusable scaffolding for use with javascript and css builds. It includes the following:
+This project is to build a reusable scaffolding for use with javascript and sass builds. It includes the following:
 
 ## Tools
 
 - Gulp
 - Babel
-- PostCSS
+- SASS
 
 ## Get Started
 
