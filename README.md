@@ -5,7 +5,7 @@ This project is to build a reusable scaffolding for use with javascript and sass
 ## Tools
 
 - Gulp
-- Typescript
+- Babel
 - SASS
 - Require.JS
 - jQuery
