@@ -1,6 +1,6 @@
 /*
 ** @name Project Starter
-** @version 1.0.0
+** @version 1.1.0
 ** @description A starter package and gulpfile for continuous-build development.
 ** @author Josh Mobley
 ** @license GNU GPLv3
@@ -10,6 +10,8 @@
 var gulp         = require('gulp');
 var browserSync  = require('browser-sync').create();
 var sass         = require('gulp-sass');
+var eslint       = require('gulp-eslint');
+var stylelint    = require('gulp-stylelint');
 var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps   = require('gulp-sourcemaps');
 var babel        = require('gulp-babel');
@@ -36,9 +38,9 @@ gulp.task('browser-sync', function() {
     browserSync.init({
         proxy: "localhost:8888/tools/project-starters/gulp-sass-babel"  // this assumes a MAMP-based localhost
     });
-    
+
 });
-    
+
 // SASS
 gulp.task('sass', function() {
 
@@ -53,7 +55,14 @@ gulp.task('sass', function() {
     });
 
     return gulp
-        .src( styles.path + styles.entry )      // file input
+        .src( styles.path + '**/*.scss')      // file input
+        .pipe( stylelint({
+          failAfterError: false,
+          reporters: [
+            { formatter: 'string', console: true },
+            { formatter: 'verbose', console: true },
+          ],
+        }))
         .pipe( sourcemaps.init() )              // create sourcemaps
         .pipe( sassConfig )                     // configure postcss
         .on( 'error', errorHandler )            // report errors via notify
@@ -62,16 +71,17 @@ gulp.task('sass', function() {
         .pipe( sourcemaps.write() )             // write sourcemaps to disk
         .pipe( gulp.dest( styles.dist ))        // write css to disk
         .pipe( browserSync.stream() );          // stream changes into browser
-       
+
 });
 
-// JAVASCRIPT 
+// JAVASCRIPT
 gulp.task("js", function() {
 
     // configure babel
     var babelConfig = babel({
         presets: ['latest'],                    // use the latest yearly ES version
-        compact: "true"                         // minify output
+        compact: "true",                         // minify output
+        plugins: ['transform-es2015-modules-amd']
     });
 
     // configure error message via notify
@@ -81,6 +91,10 @@ gulp.task("js", function() {
 
     return gulp
         .src( scripts.path + '**/*.js' )        // input files
+        .pipe( eslint({
+            fix: true
+        }))
+        .pipe( eslint.format() )
         .pipe( babelConfig )                    // transpile via babel
         .on( 'error', errorHandler )            // report error via notify
         .pipe( plumber() )                      // continue gulp build on error

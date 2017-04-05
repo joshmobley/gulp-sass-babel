@@ -5,6 +5,11 @@
 
 export default class Header{
 
-    constructor(){}
+  testMethod() {
+
+    this.prop = 'foo';
+    return false;
+
+  }
 
 }
